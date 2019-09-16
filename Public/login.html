@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset='utf-8'>
+    </head>
+    <body>
+        <form action="" class="loginForm">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button type="submit" id="loginButton">Login</button>
+        </form>
+        <br>
+        <br>
+        <h2>Make User</h2>
+        <form action="" class="makeUser">
+            <input type="text" id = 'newUsername' placeholder="Username">
+            <input type="password" id= 'newPassword1' placeholder="Password">
+            <input type="password" id="newPassword2" placeholder="Please renter password">
+            <button type="submit" id="createUserButton">Create User</button>
+        </form>
+        <h3 id = "createUserStatus"></h3>
+    </body>
+    <script>
+        const login = function( e ){
+            e.preventDefault()
+            const username = document.querySelector("#username").value
+            const password = document.querySelector("#password").value
+            console.log(username)
+            fetch( '/login', {
+              method:'POST',
+              body:JSON.stringify({ username:username, password:password }),
+              headers: { 'Content-Type': 'application/json' }
+            })
+            .then( res => {
+                console.log(res)
+                if(res.ok === false){
+                    console.log("Failed to login, incorrect")
+                }
+                else{
+                    res.json().then( res => { 
+                        console.log("User: " + res.username)
+                        console.log(res.status)
+                        window.location.replace("/secure")
+                    })
+                }
+            })
+        }
+        const createUser = function(e){
+            e.preventDefault()
+            const newUsername = document.querySelector("#newUsername").value
+            const newPassword1 = document.querySelector('#newPassword1').value
+            console.log(newUsername)
+
+            fetch('/makeuser',  {
+                method: 'POST',
+                body: JSON.stringify({newUsername:newUsername, newPassword:newPassword1}),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then( res => res.json()
+            .then( res => {
+                if (res.status === true){
+                    document.getElementById('createUserStatus').innerHTML = "User " + newUsername + " was created successfully"
+                }
+                else{
+                    document.getElementById('createUserStatus').innerHTML = "User " + newUsername + " already exists, please pick a new username"
+                }
+            }))
+        }
+        window.onload = function(){
+            const loginButton = document.querySelector("#loginButton")
+            const createUserButton = document.querySelector('#createUserButton')
+            createUserButton.onclick = createUser
+            loginButton.onclick = login
+        }
+    </script>
+</html>
