@@ -13,6 +13,8 @@ const express   = require( 'express' ),
       low       = require('lowdb')
       FileSync  = require('lowdb/adapters/FileSync');
       ensureLoggedInModule = require('connect-ensure-login')
+      const helmet = require('helmet')
+
 
 const adapter = new FileSync('db.json')
 const db = low( adapter )
@@ -91,6 +93,7 @@ passport.use(new Local(myLocalStrategy))
 app.use( session({ secret:'cats cats cats', resave:false, saveUninitialized:false }) )
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(helmet())
 
 
 app.post('/login', passport.authenticate('local', { failWithError: true }
