@@ -20,7 +20,7 @@ const adapter = new FileSync('db.json')
 const db = low( adapter )
 db.defaults({ users:[] }).write()
 db.defaults({ comments:[] }).write()
-app.use(express.static('public'))
+app.use(express.static(__dirname + '/Public'))
 app.use( bodyParser.json() )
 
 
@@ -144,12 +144,12 @@ app.post('/deletecomment', function( req, res){
 })
 
 app.get('/', function(request, response) {
-    response.sendFile( __dirname + '/public/index.html' )
+    response.sendFile(__dirname + '/Public/index.html' )
 })
 
 app.get('/login', function(request, response) {
 
-    response.sendFile( __dirname + '/public/index.html' )
+    response.sendFile( __dirname + '/Public/index.html' )
 })
 
 app.get('/secure', ensureLoggedInModule.ensureLoggedIn('/login'), function(req, res){
