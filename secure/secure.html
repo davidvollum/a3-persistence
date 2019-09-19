@@ -1,52 +1,183 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>CS4241 Assignment 2</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>CS4241 Assignment 3</title>
     <meta charset="utf-8">
   </head>
   <body>
-      <table id = "results">
-          <thead>
+
+      <table id = "results" class="table">
+          <thead class =".thead-dark">
               <tr>
-                  <th colspan="4">Comments</th>
+                  <td>Username</td>
+                  <td>Post</td>
+                  <td>Date Posted</td>
+                  <td></td>
+                  <td><button id = 'logout'>Logout</button></td>
+                  <th colspan="4"></th>
               </tr>
           </thead>
           <tbody id = "tableBody">
-              <tr>
-                  <td>Please Press refresh to see results</td>
-              </tr>
           </tbody>
       </table>
-      <button id = "refresh">refresh</button>
       <br>
-      <h3>The clear button will clear the comments stored on the server</h3>
-      <button id = "clear">clear</button>
-
-
+      <p id = "commentID", hidden = 'true'></p>
+      <h2 id  = "formlabel">Post a comment!</h2>
       <form action="">
-            <input type="text" id="name" value="Name">
-            <input type="text" id="email" value="email">
-            <input type="text" id="comment" value="comment">
+            <textarea id="comment" rows="4" cols="50"></textarea>
+            <br>
             <button id = 'submit'>submit</button>
         </form>
 
   </body>
   <script>
-    function addNewEntry(username, comment){
-      let tableRef = document.getElementById("results");
+
+    function clearTable(table) {
+        const firstRow = table.rows[0];
+        const tBody = table.tBodies[0].cloneNode(false);
+        tBody.appendChild(firstRow);
+        table.replaceChild(tBody, table.tBodies[0]);
+    }
+
+    const getCurrentDayAndTime = function(){
+        let currentdate = new Date(); 
+        let datetime = currentdate.getDate() + "/"
+                    + (currentdate.getMonth()+1)  + "/" 
+                    + currentdate.getFullYear() + " @ "  
+                    + currentdate.getHours() + ":"  
+                    + currentdate.getMinutes() + ":" 
+                    + currentdate.getSeconds();
+        return datetime
+    }
+
+    const editButtonFunction = function(e){
+        e.preventDefault()
+        let tableRef = document.getElementById("results");
+        let commentIndex = parseInt(e.target.id)-1
+        let row = tableRef.rows[commentIndex]
+        let field = document.getElementById("comment")
+        field.value = row.cells[1].innerHTML
+        const submitButton = document.getElementById( 'submit' )
+        submitButton.innerText = "Update"
+        tableRef.hidden = true
+        document.getElementById("commentID").innerText = row.cells[0].innerHTML+row.cells[2].innerHTML
+        document.getElementById("formlabel").innerHTML = "Update your comment" 
+        submitButton.onclick = updateButton
+        
+    }
+
+    const updateButton = function(e){
+        e.preventDefault()
+        const field = document.getElementById("comment")
+        const id = document.getElementById("commentID").innerText
+        updatedComment = field.value
+        field.value = ""
+
+        fetch('/updateComment',  {
+                method: 'POST',
+                body: JSON.stringify({comment:updatedComment, id:id}),
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => {
+                res.json()
+            .then(res => {
+                let tableRef = document.getElementById("results");
+                clearTable(tableRef)
+                //tableRef.innerHTML = ""
+                res.forEach(entry => {
+                    addNewEntry(tableRef, entry.username, entry.comment, entry.time, true)
+                    
+                });
+            })
+        })
+
+        const submitButton = document.getElementById( 'submit' )
+        document.getElementById("results").hidden = false
+        submitButton.innerText = "submit"
+        document.getElementById("formlabel").innerHTML = "Post a comment!" 
+        submitButton.onclick = submit
+        
+        console.log(updatedComment + " " + id)
+    }
+
+    const deleteButtonFunction = function(e){
+        e.preventDefault()
+        let resultsTable = document.getElementById('results')
+        let i = 0
+        let toDelete = [{id:e.target.id}]
+        console.log("Deleting Comment: " + toDelete)
+        /*
+        for(i; i < resultsTable.rows.length; i++){
+            let row = resultsTable.rows[i]
+            if(row.cells[3].getElementsByTagName('input')[0].checked === true){
+                let username = row.cells[0].innerText
+                toDelete.push({id: username+row.cells[2].innerText, username:username })
+            }
+        }    
+        */
+        fetch('/deletecomment',  {
+                method: 'POST',
+                body: JSON.stringify(toDelete),
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => {
+                res.json()
+            .then(res => {
+                if(res.hasOwnProperty('status')){
+                    console.log(res.status)
+                }
+                else{
+                    let tableRef = document.getElementById("results");
+                    //tableRef.innerHTML = ""
+                    clearTable(tableRef)
+                    res.forEach(entry => {
+                        addNewEntry(tableRef, entry.username, entry.comment, entry.time, true)
+                        
+                    });
+                }
+            })
+
+        })
+
+        console.log(toDelete)
+    }
+
+
+
+    function addNewEntry(tableRef, username, comment, time, ownsComment){
       let newRow = tableRef.insertRow(-1)
       let usernameText = document.createTextNode(username);
       let commentText = document.createTextNode(comment);
+      let timeText = document.createTextNode(time)
       let userNameCell = newRow.insertCell(0)
       let commentCell = newRow.insertCell(1)
+      let timeCell = newRow.insertCell(2)
+      if(ownsComment === true){
+          let deleteButton = document.createElement("BUTTON")
+          let editButton = document.createElement("BUTTON");
+          editButton.innerHTML = "Edit"
+          editButton.id = tableRef.rows.length
+          editButton.onclick = editButtonFunction
+          deleteButton.innerHTML = "Delete"
+          deleteButton.id = username+time
+          deleteButton.onclick = deleteButtonFunction
+          console.log(deleteButton)
+          let deleteButtonCell = newRow.insertCell(3)
+          let editButtonCell = newRow.insertCell(4)
+          deleteButtonCell.appendChild(deleteButton)
+          editButtonCell.appendChild(editButton)
+      }
+      timeCell.appendChild(timeText)
       userNameCell.appendChild(usernameText)
       commentCell.appendChild(commentText)
     }
 
+
 const submit = function( e ){
     e.preventDefault()
-    const comment = document.querySelector("#comment").value
-    console.log(comment)
+    const field  =  document.querySelector("#comment")
+    const comment = field.value
+    field.value = ""
     fetch('/newComment',  {
                 method: 'POST',
                 body: JSON.stringify({comment}),
@@ -55,12 +186,14 @@ const submit = function( e ){
                 res.json()
             .then(res => {
                 console.log("username: "+res.status)
-                addNewEntry(res['username'], comment)
+                let tableRef = document.getElementById("results");
+                addNewEntry(tableRef, res['username'], comment, getCurrentDayAndTime(), true)
             })
         })
     }
     
     function getComments(){
+        
         fetch('/getComments',  {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }
@@ -68,21 +201,30 @@ const submit = function( e ){
             console.log(res)
             res.json()
             .then(res => {
-                let i = 0
-                for (i = 0; i < res.length; i++){
-                    addNewEntry(res[i].username, res[i].comment)
-                }
+                let tableRef = document.getElementById("results");
+                //tableRef.innerHTML = ""
+                clearTable(tableRef)
+                res.forEach(entry => {
+                    addNewEntry(tableRef, entry.username, entry.comment, entry.time, true)
+                    
+                });
             })
         })
         
     }
-        
+
+    const logout = function(e){
+        window.location.replace("/")
+    }
 
 
   window.onload = function() {
     getComments()
     const submitButton = document.getElementById( 'submit' )
+    const logoutButton = document.getElementById('logout')
+    logoutButton.onclick = logout
     submitButton.onclick = submit
+
   }
 
   </script>

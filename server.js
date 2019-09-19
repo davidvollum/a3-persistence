@@ -21,6 +21,18 @@ db.defaults({ comments:[] }).write()
 app.use(express.static('public'))
 app.use( bodyParser.json() )
 
+
+const getCurrentDayAndTime = function(){
+    let currentdate = new Date(); 
+    let datetime = currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+    return datetime
+  }
+
 function addUser(username, password){
     user = db.get('users').find({username: username}).value()
     if(user === undefined){
@@ -33,7 +45,15 @@ function addUser(username, password){
 }
 
 function addComment(username, comment){
-    db.get('comments').push({username:username, comment:comment}).write()
+    let currentTime = getCurrentDayAndTime()
+    db.get('comments').push({id:username+currentTime, username:username, comment:comment, time:currentTime}).write()
+    return true
+}
+
+function updateComment(id, username, comment){
+    //console.log(comment)
+    let currentTime = getCurrentDayAndTime()
+    db.get('comments').find({id:id}).assign({comment:comment}).write()
     return true
 }
 
@@ -42,12 +62,10 @@ const myLocalStrategy = function(username, password, done){
     const user = db.get('users').find({username: username}).value()
     //console.log(dbUser)
 
-    console.log(user)
     if(user === undefined){
         return done(null, false, { message:'user not found' })
     }
     else if(user.password === password){
-        console.log("Logged in")
         return done(null, {username, password})
     }
     else{
@@ -93,7 +111,6 @@ app.post('/makeuser', function(req, res){
 })
 
 app.post('/getComments', function(req, res){
-    console.log(db.get("comments").value())
     res.json(db.get("comments").value())
 })
 
@@ -105,26 +122,36 @@ app.post('/newComment', function( req, res ) {
     res.json({ status:'success', username:req.user.username })
 })
 
-/*
-app.get('/appData'), function( req, res){
-    
-}
-*/
+app.post('/updateComment', function( req, res ) {
+    const id = req.body['id']
+    const username = req.user.username
+    const comment = req.body['comment']
+    updateComment(id, username, comment)
+    res.json(db.get("comments").value())
+})
+
+
+app.post('/deletecomment', function( req, res){
+    let i = 0
+    let status = 'ok'
+    console.log("Removing: " + req.body[0].id)
+    db.get('comments').remove({id: req.body[0].id}).write()
+    res.json(db.get("comments").value())
+
+})
+
 app.get('/', function(request, response) {
-    console.log("serving http")
     response.sendFile( __dirname + '/public/index.html' )
 })
 
 app.get('/login', function(request, response) {
-    console.log("serving http")
-    response.sendFile( __dirname + '/public/login.html' )
+
+    response.sendFile( __dirname + '/public/index.html' )
 })
 
 app.get('/secure', ensureLoggedInModule.ensureLoggedIn('/login'), function(req, res){
-    console.log("requesting file")
-    console.log(req.user)
     //console.log(ensureLoggedInModule.ensureLoggedIn('/login'))
-    res.sendFile( __dirname + '/secure/secure.html', { user: req.user })
+    res.sendFile( __dirname + '/secure/secure.html')
 })
 
 app.use( function( req, res, next ) {

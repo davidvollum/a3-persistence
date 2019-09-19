@@ -1,237 +1,56 @@
 {
   "users": [
     {
-      "username": "moon",
-      "password": "moonmoon"
+      "username": "a",
+      "password": "a"
     },
     {
-      "username": "moon",
-      "password": "moonmoon"
+      "username": "b",
+      "password": "b"
     },
     {
-      "username": "moon",
-      "password": "moonmoon"
+      "username": "d",
+      "password": "d"
     },
     {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon",
-      "password": "moonmoon"
-    },
-    {
-      "username": "moon2",
+      "username": "David",
       "password": "moon"
     },
     {
-      "username": "a",
-      "password": "A"
-    },
-    {
-      "username": "moon3",
-      "password": "m"
+      "username": "steve",
+      "password": "moon"
     }
   ],
   "comments": [
     {
-      "comment": "dsfsdfa"
+      "id": "a18/9/2019 @ 13:55:7",
+      "username": "a",
+      "comment": "",
+      "time": "18/9/2019 @ 12:44:6"
     },
     {
-      "comment": "sdafsdasf"
+      "id": "David19/9/2019 @ 10:32:39",
+      "username": "David",
+      "comment": "Hi, this is a test of a longer comment on this message board. Just wanna see how well it displays",
+      "time": "19/9/2019 @ 10:32:39"
     },
     {
-      "comment": "asdfsdf"
+      "id": "steve19/9/2019 @ 10:33:19",
+      "username": "steve",
+      "comment": "Wow, that was a really good point. I better test it as well",
+      "time": "19/9/2019 @ 10:33:19"
     },
     {
-      "comment": "aasdfdsf"
+      "id": "David19/9/2019 @ 10:34:13",
+      "username": "David",
+      "comment": "Really nice to meet you steve, have a nice day",
+      "time": "19/9/2019 @ 10:34:13"
     },
     {
-      "comment": "csdfsdfomment"
-    },
-    {
-      "username": {
-        "username": "moon2",
-        "password": "moon"
-      },
-      "comment": "sdafsdaf"
-    },
-    {
-      "username": {
-        "username": "moon2",
-        "password": "moon"
-      },
-      "comment": "asdfdf"
-    },
-    {
-      "username": {
-        "username": "moon2",
-        "password": "moon"
-      },
-      "comment": "sdfsdf"
-    },
-    {
-      "username": {
-        "username": "moon2",
-        "password": "moon"
-      },
-      "comment": "comment"
-    },
-    {
-      "username": {
-        "username": "moon2",
-        "password": "moon"
-      },
-      "comment": "commenthkjh"
-    },
-    {
-      "username": {
-        "username": "moon2",
-        "password": "moon"
-      },
-      "comment": "commenthkjh"
-    },
-    {
-      "username": {
-        "username": "moon2",
-        "password": "moon"
-      },
-      "comment": "commentdsf"
-    },
-    {
-      "username": {
-        "username": "moon2",
-        "password": "moon"
-      },
-      "comment": "comment"
-    },
-    {
-      "username": {
-        "username": "moon2",
-        "password": "moon"
-      },
-      "comment": "234432"
-    },
-    {
-      "username": {
-        "username": "moon3",
-        "password": "m"
-      },
-      "comment": "324fa"
-    },
-    {
-      "username": {
-        "username": "moon",
-        "password": "moonmoon"
-      },
-      "comment": "efaeewfw"
-    },
-    {
-      "username": {
-        "username": "moon",
-        "password": "moonmoon"
-      },
-      "comment": "comment"
-    },
-    {
-      "username": {
-        "username": "moon",
-        "password": "moonmoon"
-      },
-      "comment": "dfasdsadfadsf"
-    },
-    {
-      "comment": "sfafdds"
-    },
-    {
-      "comment": "sdadfssdf"
-    },
-    {
-      "comment": "sdfafdse"
+      "id": "steve19/9/2019 @ 10:34:30",
+      "username": "steve",
+      "comment": "you to David!",
+      "time": "19/9/2019 @ 10:34:30"
     }
   ]
 }

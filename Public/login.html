@@ -49,23 +49,29 @@
             e.preventDefault()
             const newUsername = document.querySelector("#newUsername").value
             const newPassword1 = document.querySelector('#newPassword1').value
+            const newPassword2 = document.querySelector('#newPassword2').value
             console.log(newUsername)
-
-            fetch('/makeuser',  {
-                method: 'POST',
-                body: JSON.stringify({newUsername:newUsername, newPassword:newPassword1}),
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then( res => res.json()
-            .then( res => {
-                if (res.status === true){
-                    document.getElementById('createUserStatus').innerHTML = "User " + newUsername + " was created successfully"
-                }
-                else{
-                    document.getElementById('createUserStatus').innerHTML = "User " + newUsername + " already exists, please pick a new username"
-                }
-            }))
+            if(newPassword1 === newPassword2){
+                fetch('/makeuser',  {
+                    method: 'POST',
+                    body: JSON.stringify({newUsername:newUsername, newPassword:newPassword1}),
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then( res => res.json()
+                .then( res => {
+                    if (res.status === true){
+                        document.getElementById('createUserStatus').innerHTML = "User " + newUsername + " was created successfully"
+                    }
+                    else{
+                        document.getElementById('createUserStatus').innerHTML = "User " + newUsername + " already exists, please pick a new username"
+                    }
+                }))
+            }
+            else{
+            document.getElementById('createUserStatus').innerHTML = "Error: passwords dont match"
         }
+    }
+        
         window.onload = function(){
             const loginButton = document.querySelector("#loginButton")
             const createUserButton = document.querySelector('#createUserButton')
